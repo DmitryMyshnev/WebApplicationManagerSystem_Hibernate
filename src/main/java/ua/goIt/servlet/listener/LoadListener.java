@@ -4,9 +4,6 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
-import org.hibernate.SessionFactory;
-import ua.goIt.DbStatement;
-import ua.goIt.config.HibernateUtil;
 import ua.goIt.services.webService.*;
 
 
@@ -15,7 +12,6 @@ public class LoadListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-       // DbStatement.createConnection();
 
         ServletContext servletContext = sce.getServletContext();
         servletContext.setAttribute("developerService", DeveloperWebService.getInstance());

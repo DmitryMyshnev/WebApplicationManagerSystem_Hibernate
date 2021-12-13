@@ -5,17 +5,11 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.query.Query;
-import ua.goIt.DbStatement;
+
 import ua.goIt.config.HibernateUtil;
 import ua.goIt.model.Developer;
 import ua.goIt.model.Project;
 import ua.goIt.model.Skill;
-
-import javax.persistence.TypedQuery;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

@@ -4,14 +4,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import ua.goIt.DbStatement;
+
 import ua.goIt.config.HibernateUtil;
 import ua.goIt.model.Company;
-import ua.goIt.model.Developer;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
