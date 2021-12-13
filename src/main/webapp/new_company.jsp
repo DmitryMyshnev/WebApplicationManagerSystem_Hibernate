@@ -27,10 +27,10 @@
                    id="name" placeholder="Company name">
         </div>
         <div class="mb-3">
-            <label for="quantity " class="form-label">Age</label>
+            <label for="quantity " class="form-label">Quantity Employee</label>
             <input type="text" class="form-control"
                    value=""
-                   id="quantity" placeholder="Quantity Employee">
+                   id="quantity" placeholder="Quantity">
 
     </div>
     <div class="row">
