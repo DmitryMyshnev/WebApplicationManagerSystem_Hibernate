@@ -1,6 +1,8 @@
 package ua.goIt.model;
 
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,16 +24,33 @@ public class Project implements Identity {
     @Column(name = "date")
     private String date;
 
-    @ManyToMany(mappedBy = "projects", fetch = FetchType.LAZY,
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinTable(
+            name = "developer_project",
+            inverseJoinColumns = { @JoinColumn(name = "developer_id") },
+            joinColumns = { @JoinColumn(name = "project_id") }
+    )
     private List<Developer> developers =  new ArrayList<>();
 
-    @ManyToMany(mappedBy = "projects", fetch = FetchType.LAZY,
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinTable(
+            name = "company_project",
+            inverseJoinColumns = { @JoinColumn(name = "company_id") },
+            joinColumns = { @JoinColumn(name = "project_id") }
+    )
     private List<Company> companies  =  new ArrayList<>();
 
-    @ManyToMany(mappedBy = "projects", fetch = FetchType.LAZY,
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "custom_project",
+            inverseJoinColumns = { @JoinColumn(name = "custom_id") },
+            joinColumns = { @JoinColumn(name = "project_id") }
+    )
     private List<Customer> customers  =  new ArrayList<>();
 
 

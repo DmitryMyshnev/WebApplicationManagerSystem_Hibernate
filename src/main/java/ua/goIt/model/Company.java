@@ -1,6 +1,8 @@
 package ua.goIt.model;
 
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ public class Company implements Identity {
     private Integer quantityEmployee;
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
             fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     @JoinTable(
             name = "company_project",
             joinColumns = { @JoinColumn(name = "company_id") },

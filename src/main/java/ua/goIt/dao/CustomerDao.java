@@ -3,10 +3,13 @@ package ua.goIt.dao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import ua.goIt.config.HibernateUtil;
 import ua.goIt.model.Customer;
+import ua.goIt.model.Project;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -19,18 +22,43 @@ public class CustomerDao extends AbstractDao<Customer>{
 
     @Override
     public Optional<Customer> getById(Long id) {
-        Customer customer = HibernateUtil.getSession().get(Customer.class,id);
-        return Optional.of(customer);
+        Session session;
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        session = sessionFactory.openSession();
+        try (session){
+            Transaction transaction = session.beginTransaction();
+            Customer customer = session.get(Customer.class,id);
+            transaction.commit();
+            return Optional.of(customer);
+        }
     }
 
     @Override
     public List<Customer> getAll() {
-        Session session = HibernateUtil.getSession();
-        Transaction transaction = session.beginTransaction();
-        List<Customer> customers = HibernateUtil.getSession().createQuery("FROM Customer", Customer.class).getResultList();
-        transaction.commit();
-        session.close();
-        return customers;
+        Session session;
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        session = sessionFactory.openSession();
+        try (session){
+            Transaction transaction = session.beginTransaction();
+            List<Customer> customers = session.createQuery("FROM Customer", Customer.class).getResultList();
+            transaction.commit();
+            return customers;
+        }
+    }
+
+    @Override
+    public void delete(Customer entity) {
+        Session session;
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        session = sessionFactory.openSession();
+        try (session){
+            Transaction transaction = session.beginTransaction();
+            for (Project prj : entity.getProjects()) {
+                prj.getCustomers().remove(entity);
+            }
+            session.delete(entity);
+            transaction.commit();
+        }
     }
 
     public static CustomerDao getInstance(){

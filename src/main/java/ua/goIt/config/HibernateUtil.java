@@ -12,8 +12,18 @@ import java.util.Properties;
 
 public class HibernateUtil {
     private static SessionFactory sessionFactory;
-    public static Session getSession(){
-        if (sessionFactory == null) {
+
+    public static Session getSession() {
+        return getSessionFactory().openSession();
+    }
+
+    public static SessionFactory getSessionFactory() {
+      if(sessionFactory == null) {
+          sessionFactory = init();
+      }
+       return sessionFactory;
+    }
+    private static SessionFactory init(){
             try {
                 Configuration configuration = new Configuration();
 
@@ -27,7 +37,7 @@ public class HibernateUtil {
 
                 settings.put(Environment.SHOW_SQL, "true");
 
-               // settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
+                 settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
 
                 //settings.put(Environment.HBM2DDL_AUTO, "create-drop");
 
@@ -46,8 +56,7 @@ public class HibernateUtil {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        return sessionFactory.openSession();
+        return sessionFactory;
     }
-
 }
+

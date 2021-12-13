@@ -43,7 +43,6 @@ public class Developer implements Identity {
             joinColumns = { @JoinColumn(name = "developer_id") },
             inverseJoinColumns = { @JoinColumn(name = "project_id") }
     )
-
     private List<Project> projects =  new ArrayList<>();
 
     @Override

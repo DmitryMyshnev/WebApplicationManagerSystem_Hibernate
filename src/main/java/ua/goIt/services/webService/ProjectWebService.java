@@ -17,7 +17,7 @@ public class ProjectWebService implements CrudWeb<Project> {
     private final CustomerDao customerDao;
 
     private ProjectWebService() {
-        projectDao =  ProjectDao.getInstance();
+        projectDao = ProjectDao.getInstance();
         developerDao = DeveloperDao.getInstance();
         companyDao = CompanyDao.getInstance();
         customerDao = CustomerDao.getInstance();
@@ -41,7 +41,7 @@ public class ProjectWebService implements CrudWeb<Project> {
     @Override
     public List<Project> getAll() {
 
-  return projectDao.getAll();
+        return projectDao.getAll();
     }
 
     @Override

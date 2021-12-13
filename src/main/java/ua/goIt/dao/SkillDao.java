@@ -3,6 +3,7 @@ package ua.goIt.dao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import ua.goIt.config.HibernateUtil;
 import ua.goIt.model.Skill;
@@ -18,18 +19,30 @@ public class SkillDao extends AbstractDao<Skill>{
 
     @Override
     public Optional<Skill> getById(Long id) {
-        Skill skill = HibernateUtil.getSession().get(Skill.class,id);
-        return Optional.of(skill);
+        Session session;
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        session = sessionFactory.openSession();
+        try (session){
+            Transaction transaction = session.beginTransaction();
+            Skill skill =session.get(Skill.class,id);
+            transaction.commit();
+            return Optional.of(skill);
+        }
+
     }
 
     @Override
     public List<Skill> getAll() {
-        Session session = HibernateUtil.getSession();
-        Transaction transaction = session.beginTransaction();
-        List<Skill> skills = HibernateUtil.getSession().createQuery("FROM Skill", Skill.class).getResultList();
-        transaction.commit();
-        session.close();
-        return skills;
+        Session session;
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        session = sessionFactory.openSession();
+        try (session){
+            Transaction transaction = session.beginTransaction();
+            List<Skill> skills = session.createQuery("FROM Skill", Skill.class).getResultList();
+            transaction.commit();
+            return skills;
+        }
+
     }
 
 
