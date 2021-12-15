@@ -1,6 +1,8 @@
 package ua.goIt.model;
 
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,8 +20,14 @@ public class Skill implements Identity {
     private String language;
     @Column(name = "level")
     private String level;
-    @ManyToMany(mappedBy = "skills", fetch = FetchType.LAZY,
-            cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH},
+            fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinTable(
+            name = "developer_skills",
+            inverseJoinColumns = { @JoinColumn(name = "developer_id")},
+            joinColumns = { @JoinColumn(name = "skills_id")}
+    )
     private List<Developer> developers = new ArrayList<>();
 
     @Override

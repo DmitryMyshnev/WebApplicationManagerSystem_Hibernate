@@ -6,6 +6,7 @@ import ua.goIt.dao.DeveloperDao;
 import ua.goIt.dao.ProjectDao;
 import ua.goIt.model.Project;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,8 @@ public class ProjectWebService implements CrudWeb<Project> {
 
     @Override
     public void save(Project entity) {
+        SimpleDateFormat  date = new SimpleDateFormat("dd.MM.yyyy");
+        entity.setDate(date.format(System.currentTimeMillis()));
         projectDao.create(entity);
     }
 

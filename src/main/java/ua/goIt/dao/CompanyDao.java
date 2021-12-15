@@ -2,6 +2,7 @@ package ua.goIt.dao;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -23,42 +24,58 @@ public class CompanyDao extends AbstractDao<Company>{
     @Override
     public Optional<Company> getById(Long id) {
         Session session;
+        Transaction transaction = null;
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         session = sessionFactory.openSession();
         try (session){
-            Transaction transaction = session.beginTransaction();
+             transaction = session.beginTransaction();
             Company company = session.get(Company.class,id);
             transaction.commit();
             return Optional.of(company);
         }
-
+        catch (HibernateException e){
+            if(transaction != null)
+                transaction.rollback();
+            return Optional.empty();
+        }
     }
 
     @Override
     public List<Company> getAll() {
         Session session;
+        Transaction transaction = null;
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         session = sessionFactory.openSession();
         try (session){
-            Transaction transaction = session.beginTransaction();
+             transaction = session.beginTransaction();
             List<Company> companies = session.createQuery("FROM Company", Company.class).getResultList();
             transaction.commit();
             return companies;
+        }
+        catch (HibernateException e){
+            if(transaction != null)
+                transaction.rollback();
+            return List.of();
         }
     }
 
     @Override
     public void delete(Company entity) {
         Session session;
+        Transaction transaction = null;
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         session = sessionFactory.openSession();
         try (session){
-            Transaction transaction = session.beginTransaction();
+             transaction = session.beginTransaction();
             for (Project prj : entity.getProjects()) {
                 prj.getCompanies().remove(entity);
             }
             session.delete(entity);
             transaction.commit();
+        }
+        catch (HibernateException e){
+            if(transaction != null)
+                transaction.rollback();
         }
     }
 

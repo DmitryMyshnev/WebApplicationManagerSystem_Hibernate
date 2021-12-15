@@ -26,39 +26,50 @@ public class DeveloperDao extends AbstractDao<Developer> {
     @Override
     public Optional<Developer> getById(Long id) {
         Session session;
+        Transaction transaction = null;
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         session = sessionFactory.openSession();
-        try (session){
-            Transaction transaction = session.beginTransaction();
+        try (session) {
+            transaction = session.beginTransaction();
             Developer developer = session.get(Developer.class, id);
             transaction.commit();
             return Optional.of(developer);
         }
-
+        catch (HibernateException e) {
+            if (transaction != null)
+                transaction.rollback();
+            return Optional.empty();
+        }
     }
 
     @Override
     public List<Developer> getAll() {
         Session session;
+        Transaction transaction = null;
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         session = sessionFactory.openSession();
         try (session) {
-            Transaction transaction = session.beginTransaction();
+             transaction = session.beginTransaction();
             List<Developer> developers = HibernateUtil.getSession().createQuery("FROM Developer", Developer.class).getResultList();
             transaction.commit();
             return developers;
         }
-
+        catch (HibernateException e){
+            if(transaction != null)
+                transaction.rollback();
+            return List.of();
+        }
     }
 
     @Override
     public void delete(Developer entity) {
         Session session;
+        Transaction transaction = null;
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         session = sessionFactory.openSession();
 
         try (session) {
-            Transaction transaction = session.beginTransaction();
+             transaction = session.beginTransaction();
             for (Project prj : entity.getProjects()) {
                 prj.getDevelopers().remove(entity);
             }
@@ -67,6 +78,10 @@ public class DeveloperDao extends AbstractDao<Developer> {
             }
             session.delete(entity);
             transaction.commit();
+        }
+        catch (HibernateException e){
+            if(transaction != null)
+                transaction.rollback();
         }
     }
 
